@@ -1,0 +1,92 @@
+doctype html
+head
+  include partials/head.pug
+  link(rel='stylesheet' href='https://developer.api.autodesk.com/modelderivative/v2/viewers/6.*/style.css')
+  link(rel='stylesheet' href='/stylesheets/facility.css')
+  link(rel='stylesheet' href='/scripts/extensions/issues.css')
+  script(src='https://developer.api.autodesk.com/modelderivative/v2/viewers/6.*/viewer3D.js')
+  script(src='https://petrbroz.github.io/forge-viewer-utils/master/Utilities.js')
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js')
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.js')
+  script(src='https://cdn.jsdelivr.net/npm/chartjs-plugin-streaming@1.7.1/dist/chartjs-plugin-streaming.min.js')
+#container
+  #header
+    a(href="/")
+      img(src='https://cdn.autodesk.io/logo/black/stacked.png' alt='Autodesk Platform Services')
+    h Industrial Construction Demo
+  #viewer
+  #location
+    .dropdown
+      button.btn.btn-secondary.dropdown-toggle(type="button" id="location-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Facility: #{facility}
+      .dropdown-menu(aria-labelledby="location-button")
+        div#map
+  #sidebar
+    ul#sidebar-tabs.nav.nav-tabs.nav-fill.mb-3(role='tablist')
+      li.nav-item
+        a#models-tab.nav-link.active(data-toggle='tab' href='#models' role='tab' aria-controls='models' aria-selected='true') Areas/Systems
+      li.nav-item
+        a#realtime-tab.nav-link(data-toggle='tab' href='#realtime' role='tab' aria-controls='realtime' aria-selected='false') Realtime
+      li.nav-item
+        a#issues-tab.nav-link(data-toggle='tab' href='#issues' role='tab' aria-controls='issues' aria-selected='false') Issues
+    #sidebar-tabs-content.tab-content
+      #models.tab-pane.fade.show.active(role='tabpanel' aria-labelledby='models-tab')
+        h5 Visibility
+        table#models-table.table.table-sm
+      #realtime.tab-pane.fade(role='tabpanel' aria-labelledby='realtime-tab')
+        div.alert.alert-secondary Select a single equipment or piping component
+        h5.equipment-number.show-based-on-selection
+        h6.show-based-on-selection Temperature
+        canvas#temperature-chart.show-based-on-selection(width='100%')
+        h6.show-based-on-selection Pressure
+        canvas#pressure-chart.show-based-on-selection(width='100%')
+      #issues.tab-pane.fade(role='tabpanel' aria-labelledby='issues-tab')
+        h5 Existing Issues
+        table#issues-table.table.table-hover.table-sm
+          thead
+            tr
+              th(scope="col") Date
+              th(scope="col") Part #
+              th(scope="col") Author
+              th(scope="col") Note
+          tbody
+        h5 Report New Issue
+        div.alert.alert-secondary Select a single part in the model
+        form#issue-form
+          .row.mb-2
+            label.col-sm-2.col-form-label(for='issue-model') Model
+            .col-sm-10
+              input#issue-model.form-control-plaintext(type='text' readonly='' value='0')
+          .row.mb-2
+            label.col-sm-2.col-form-label(for='issue-part') Part #
+            .col-sm-10
+              input#issue-part.form-control-plaintext(type='text' readonly='' value='0')
+          .row.mb-2
+            label.col-sm-2.col-form-label(for='issue-title') Description
+            .col-sm-10
+              input#issue-title.form-control(type='text' value='Short issue description.')
+          .row.mb-2
+            label.col-sm-2.col-form-label(for='issue-author') Author
+            .col-sm-10
+              input#issue-author.form-control(type='text' value='John Doe')
+          .row.mb-2
+            label.col-sm-1.col-form-label(for='issue-position-x') X
+            .col-sm-3
+              input#issue-position-x.form-control(type='text' value='0.0')
+            label.col-sm-1.col-form-label(for='issue-position-y') Y
+            .col-sm-3
+              input#issue-position-y.form-control(type='text' value='0.0')
+            label.col-sm-1.col-form-label(for='issue-position-z') Z
+            .col-sm-3
+              input#issue-position-z.form-control(type='text' value='0.0')
+          button.btn.btn-primary.btn-block(type='submit') Submit
+        #issue-modal.modal.fade(tabindex='-1' role='dialog' aria-hidden='true')
+          .modal-dialog
+            .modal-content
+              .modal-body
+                p ...
+include partials/footer.pug
+script(src="https://cdn.datatables.net/v/bs4/dt-1.10.18/sl-1.2.6/datatables.min.js")
+script(src='/scripts/extensions/issues.js')
+script(src='/scripts/extensions/heatmap.js')
+script(src='/scripts/facility.js')
+script(src='https://maps.googleapis.com/maps/api/js?callback=initMap&key=' + GOOGLE_MAPS_API_KEY, async, defer)

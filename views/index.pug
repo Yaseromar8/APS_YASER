@@ -1,0 +1,13 @@
+doctype html
+head
+  include partials/head.pug
+  link(rel='stylesheet' href='/stylesheets/index.css')
+#container
+  #header
+    a(href="/")
+      img(src='https://cdn.autodesk.io/logo/black/stacked.png' alt='Autodesk Platform Services')
+    h Industrial Construction Demo
+  div#map
+include partials/footer.pug
+script(src='/scripts/index.js')
+script(src='https://maps.googleapis.com/maps/api/js?callback=initMap&key=' + GOOGLE_MAPS_API_KEY,async,defer)
